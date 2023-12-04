@@ -48,62 +48,63 @@ def fehlerfunktion(P_pulse, t_p, rate, t_end, n, cache={}):
     return diff
 
 
-def nullstellen(fehlerfunktion, a, b, args=()):
-    bisektion = bisect(fehlerfunktion, a, b, args=args, xtol=1)
-    print(bisektion)
-    nullstelle = newton(fehlerfunktion, bisektion, args=args, tol=0.1)
+def nullstellen(func, a, b, args=()):
+    bisektion = bisect(func, a, b, args=args, xtol=1)
+    nullstelle = newton(func, bisektion, args=args, tol=0.1)
+    print(nullstelle)
     return nullstelle
 
-# Beispiel für die Anwendung der geänderten Funktion
-n = 10
-t_p = [i*0.1 for i in range(1, n+1)]
-rate_vals = [i*0.1 for i in range(1, n+1)]
-p_opt = []
-colormap_data = []
-colormap_data_thick = []
-print(t_p[0], rate_vals[0])
+if __name__ == "__main__":
+    # Beispiel für die Anwendung der geänderten Funktion
+    n = 10
+    t_p = [i*0.1 for i in range(1, n+1)]
+    rate_vals = [i*0.1 for i in range(1, n+1)]
+    p_opt = []
+    colormap_data = []
+    colormap_data_thick = []
+    print(t_p[0], rate_vals[0])
 
 
 
-# Schleife für die Berechnung der optimalen Pulsbreite
+    # Schleife für die Berechnung der optimalen Pulsbreite
 
-print('p_opt Berechnung läuft:')
-for i in range(len(rate_vals)):
-    print(f'Berechnung für t_p={t_p[i]}s:')
-    for r in rate_vals:
-        p_opt.append(nullstellen(fehlerfunktion, 0, 1e10, args=(t_p[i], r, 10, 10)))
-print('p_opt Berechnung ist fertig.')
-#print(p_opt)
-# Schleife über die Leistung und Pulsbreiten
-print('Berechnung der Temperaturen läuft:')
-for tp in t_p:
-    for p in range(len(rate_vals)):
-        #print(p, tp)
-        thickness_solved, temperature = schichtdicke(P=p_opt[p], t_p=tp, pulsed=True)  # Gepulster Betrieb
-        print(f'Thickness: {thickness_solved}nm, Temperature: {temperature}K')
-        colormap_data.append(temperature)
-        colormap_data_thick.append(thickness_solved)
-print('Berechnung der Temperaturen ist fertig.')
+    print('p_opt Berechnung läuft:')
+    for i in range(len(rate_vals)):
+        print(f'Berechnung für t_p={t_p[i]}s:')
+        for r in rate_vals:
+            p_opt.append(nullstellen(fehlerfunktion, 0, 1e10, args=(t_p[i], r, 10, 10)))
+    print('p_opt Berechnung ist fertig.')
+    #print(p_opt)
+    # Schleife über die Leistung und Pulsbreiten
+    print('Berechnung der Temperaturen läuft:')
+    for tp in t_p:
+        for p in range(len(rate_vals)):
+            #print(p, tp)
+            thickness_solved, temperature = schichtdicke(P=p_opt[p], t_p=tp, pulsed=True)  # Gepulster Betrieb
+            print(f'Thickness: {thickness_solved}nm, Temperature: {temperature}K')
+            colormap_data.append(temperature)
+            colormap_data_thick.append(thickness_solved)
+    print('Berechnung der Temperaturen ist fertig.')
 
-# Erstellen der Farbkarte
-def create_colormap(rate, pulse_durations, temp):
-    # Erstellen des Meshgrids für die Leistung und die Pulsbreiten
-    p, T_p = np.meshgrid(rate, pulse_durations)
-    # Konvertiert die Temperaturen in ein Array und formt es in die richtige Form (2D)
-    Temps = np.array(temp).reshape(len(rate), len(pulse_durations))
-    # Erstellen der Farbkarte mit imshow
-    plt.figure(figsize=(8, 6))
-    plt.imshow(Temps, extent=(p.min(), p.max(), T_p.min(), T_p.max()), origin='lower', aspect='auto', cmap='inferno')
-    #for i in range(len(p_opt)):
-        #plt.plot(power, p_opt[i], ':', label=f'$t_P$ same thickness as const P={(i+10)*100 }W')
-    plt.colorbar(label='Substrattemperatur')
-    #plt.loglog()
-    plt.xlabel('Rate')
-    plt.ylabel('Pulsdauer')
-    plt.title('Temperatur Colormap')
-    #plt.legend()
-    plt.show()
+    # Erstellen der Farbkarte
+    def create_colormap(rate, pulse_durations, temp):
+        # Erstellen des Meshgrids für die Leistung und die Pulsbreiten
+        p, T_p = np.meshgrid(rate, pulse_durations)
+        # Konvertiert die Temperaturen in ein Array und formt es in die richtige Form (2D)
+        Temps = np.array(temp).reshape(len(rate), len(pulse_durations))
+        # Erstellen der Farbkarte mit imshow
+        plt.figure(figsize=(8, 6))
+        plt.imshow(Temps, extent=(p.min(), p.max(), T_p.min(), T_p.max()), origin='lower', aspect='auto', cmap='inferno')
+        #for i in range(len(p_opt)):
+            #plt.plot(power, p_opt[i], ':', label=f'$t_P$ same thickness as const P={(i+10)*100 }W')
+        plt.colorbar(label='Substrattemperatur')
+        #plt.loglog()
+        plt.xlabel('Rate')
+        plt.ylabel('Pulsdauer')
+        plt.title('Temperatur Colormap')
+        #plt.legend()
+        plt.show()
 
-create_colormap(rate_vals, t_p, colormap_data)
+    create_colormap(rate_vals, t_p, colormap_data)
 
-    
+        
