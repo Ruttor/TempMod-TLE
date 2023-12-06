@@ -95,8 +95,12 @@ def find_power(func, b, args=()):
     -------
     float: The optimal power
     """
-    bisection = bisect(func, 0, b, args=args, xtol=1)
-    opt_power = newton(func, bisection, args=args, tol=0.01)
+    # try to find the point where the function crosses the x-axis. If ValueError is raised, return NaN
+    try:
+        bisection = bisect(func, 0, b, args=args, xtol=1)
+        opt_power = newton(func, bisection, args=args, tol=0.01)
+    except ValueError:
+        opt_power = np.NaN
     return opt_power
 
 def calc_p_opt(t_p, rate_vals):
