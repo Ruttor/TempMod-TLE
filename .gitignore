@@ -6,3 +6,6 @@ __pycache__/
 
 # Ignore artefact
 currently_important_artefact.ipynb
+
+#ignore test case
+Testcase.ipynb
