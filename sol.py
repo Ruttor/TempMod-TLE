@@ -18,7 +18,7 @@ params = {
     'thick0': 0.0,
     }
 
-def thickness(P, t_end=100, t_p=None, n=10, pulsed=False):
+def calc_res(P, t_end=100, t_p=None, n=10, pulsed=False):
     """Calculates the thickness of the grown layer and the maximum substrate temperature.
     
     Parameters
@@ -48,7 +48,7 @@ def thickness(P, t_end=100, t_p=None, n=10, pulsed=False):
     else:
         result = tm.mod(P=P, T0_so=params['T0_so'], T0_sub=params['T0_sub'], t_range=[0, t_end], gr_factor=dgl.c['gr_factor'], gr_exp=dgl.c['gr_exp'])
     # Returns the last thickness and the maximum substrate temperature
-    return result['Thickness'][-1], result['Temp_substrate'].max()
+    return result
 
 def difference(P_pulse, t_p, rate, t_end, n):
     """Calculates the difference between the thickness of the grown layer for constant and pulsed laser heating.
@@ -74,7 +74,7 @@ def difference(P_pulse, t_p, rate, t_end, n):
     """
     # Calculates the thickness of the grown layer for constant laser heating
     thickness_const = rate * t_end
-    thickness_pulse, _ = thickness(P_pulse, t_end, t_p, n, pulsed=True)
+    thickness_pulse = calc_res(P_pulse, t_end, t_p, n, pulsed=True)['Thickness'][-1]
     diff = thickness_const - thickness_pulse
     return diff
 
@@ -117,7 +117,7 @@ def calc_p_opt(t_p, rate_vals):
     print('Calculation of optimal powervalues is running:')
     for tp0 in t_p:
         print(f'Calculation for t_p={tp0:.1f} s:')
-        for r in rate_vals:
+        for r in tqdm(rate_vals):
             p_opt.append(find_power(difference, 1e3, args=(tp0, r, 100, 10)))
     p_opt = np.array(p_opt).reshape(len(t_p), len(rate_vals))
     print('Calculation of optimal powervalues is done.')
@@ -144,7 +144,8 @@ def calc_temp(t_p, rate_vals, p_opt):
     print('Calculation of temperatures is running:')
     for i in range(len(t_p)):
         for p in range(len(rate_vals)):
-            thickness_solved, temperature = thickness(P=p_opt[i][p], t_p=t_p[i], pulsed=True)
+            res = calc_res(P=p_opt[i][p], t_p=t_p[i], pulsed=True)
+            thickness_solved, temperature = res['Thickness'][-1], max(res['Temp_substrate'])
             print(f'Thickness: {thickness_solved:.2f} A, Temperature: {temperature:.2f} K')
             colormap_data.append(temperature)
             colormap_data_thick.append(thickness_solved)
