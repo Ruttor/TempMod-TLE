@@ -143,18 +143,18 @@ def calc_temp(t_p, rate_vals, p_opt):
     -------
     tuple: Tuple containing the temperatures and the thicknesses for different pulse durations and rates
     """
-    colormap_data = []
-    colormap_data_thick = []    
+    temps = []
+    thicks = []    
     print('Calculation of temperatures is running:')
     for i in range(len(t_p)):
         for p in range(len(rate_vals)):
             res = calc_res(P=p_opt[i][p], t_p=t_p[i], pulsed=True)
-            thickness_solved, temperature = res['Thickness'][-1], max(res['Temp_substrate'])
-            print(f'Thickness: {thickness_solved:.2f} A, Temperature: {temperature:.2f} K')
-            colormap_data.append(temperature)
-            colormap_data_thick.append(thickness_solved)
+            thickness, temperature = res['Thickness'][-1], max(res['Temp_substrate'])
+            print(f'Thickness: {thickness:.2f} A, Temperature: {temperature:.2f} K')
+            temps.append(temperature)
+            thicks.append(thickness)
     print('Calculation of temperatures is done.')
-    return colormap_data, colormap_data_thick
+    return temps, thicks
 
 def create_colormap(rate, pulse_durations, temp):
     # Creates a meshgrid for the colormap

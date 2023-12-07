@@ -44,8 +44,8 @@ class TempMod:
         dict: A dictionary containing Time, Temp_source, Temp_substrate, Power, Thickness, and Growth_rate.
         """
 
-        T_source, T_substrate, power, time = self.__calc_temps__(P, T0_so, T0_sub, t_range, pulsed, f, t_p, n)  # Calculate the temperature at the surface and substrate, as well as power and time
-        thick, growth_rate = self.__calc_thick__(T_source, time, thick0, gr_factor, gr_exp)  # Calculate the thickness of the grownlayer
+        T_source, T_substrate, power, time = self.__calc_temps(P, T0_so, T0_sub, t_range, pulsed, f, t_p, n)  # Calculate the temperature at the surface and substrate, as well as power and time
+        thick, growth_rate = self.__calc_thick(T_source, time, thick0, gr_factor, gr_exp)  # Calculate the thickness of the grownlayer
 
         return {
             "Time": time,
@@ -56,7 +56,7 @@ class TempMod:
             "Growth_rate": growth_rate,
         }
 
-    def __calc_temps__(self, P, T0_so, T0_sub, t_range=False, pulsed=False, f=None, t_p=None, n=None):
+    def __calc_temps(self, P, T0_so, T0_sub, t_range=False, pulsed=False, f=None, t_p=None, n=None):
         """Calculate the temperature at the surface and at the substrate.
 
         Returns
@@ -120,7 +120,7 @@ class TempMod:
 
         return np.array(T_source), np.array(T_substrate), np.array(power), np.array(time)
 
-    def __calc_thick__(self, T_source, time, thick0, gr_factor, gr_exp):
+    def __calc_thick(self, T_source, time, thick0, gr_factor, gr_exp):
         """Calculate the thickness of the grown layer.
 
         Returns
