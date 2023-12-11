@@ -148,11 +148,15 @@ def calc_temp(t_p, rate_vals, p_opt):
     print('Calculation of temperatures is running:')
     for i in range(len(t_p)):
         for p in range(len(rate_vals)):
-            res = calc_res(P=p_opt[i][p], t_p=t_p[i], pulsed=True)
-            thickness, temperature = res['Thickness'][-1], max(res['Temp_substrate'])
-            print(f'Thickness: {thickness:.2f} A, Temperature: {temperature:.2f} K')
-            temps.append(temperature)
-            thicks.append(thickness)
+            if p_opt[i][p] == np.NaN:
+                temps.append(np.NaN)
+                thicks.append(np.NaN)
+            else:
+                res = calc_res(P=p_opt[i][p], t_p=t_p[i], pulsed=True)
+                thickness, temperature = res['Thickness'][-1], max(res['Temp_substrate'])
+                print(f'Thickness: {thickness:.2f} A, Temperature: {temperature:.2f} K')
+                temps.append(temperature)
+                thicks.append(thickness)
     print('Calculation of temperatures is done.')
     return temps, thicks
 
