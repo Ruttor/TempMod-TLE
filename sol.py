@@ -164,7 +164,7 @@ def create_colormap(rate, pulse_durations, temp):
     # Creates a meshgrid for the colormap
     p, T_p = np.meshgrid(rate, pulse_durations)
     # Converts the temperatures into an array and reshapes it into the right shape (2D)
-    Temps = np.array(temp).reshape(len(rate), len(pulse_durations))
+    Temps = np.array(temp).reshape(len(pulse_durations), len(rate))
     # Creates the colormap
     plt.figure(figsize=(8, 6))
     plt.imshow(Temps, extent=(p.min(), p.max(), T_p.min(), T_p.max()), origin='lower', aspect='auto', cmap='inferno')

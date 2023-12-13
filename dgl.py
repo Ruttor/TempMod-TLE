@@ -1,13 +1,13 @@
 # Faktoren vor den Termen in den DGL's
 c = {
-    'source_therm_cap': 1e2, # thermal capacity source
+    'source_therm_cap': 1e-2, # thermal capacity source
     'source_radiation': -3e-11, # radiative heat emission at source
     'laser_power': 0.5, # laser power
     'sub_therm_cap': 1e-6, # thermal capacity source
-    'sub_absorption': 9e-7, # radiative heat absorption at substrate from source
+    'sub_absorption': 9e-4, # radiative heat absorption at substrate from source
     'sub_radiation': 1e0, # radiative heat emission at substrate
-    'gr_factor': 8e0, # growth rate factor '' e^(-1/T)
-    'gr_exp': 1.128e3, # growth rate exponent factor e^(- '' /T)
+    'gr_factor': 8e1, # growth rate factor '' e^(-1/T)
+    'gr_exp': 5e1, # growth rate exponent factor e^(- '' /T)
     }
 
 # Zu lösendes Differentialgleichungssystem
