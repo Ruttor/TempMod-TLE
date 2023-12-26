@@ -149,6 +149,7 @@ def calc_temp(t_p, rate_vals, p_opt):
     for i in range(len(t_p)):
         for p in range(len(rate_vals)):
             if np.isnan(p_opt[i][p]):
+                print(f'No optimal power found for t_p={t_p[i]:.1f} s and rate={rate_vals[p]:.1f} A/s')
                 temps.append(np.NaN)
                 thicks.append(np.NaN)
             else:
@@ -160,7 +161,7 @@ def calc_temp(t_p, rate_vals, p_opt):
     print('Calculation of temperatures is done.')
     return temps, thicks
 
-def create_colormap(rate, pulse_durations, temp):
+def create_tempmap(rate, pulse_durations, temp):
     # Creates a meshgrid for the colormap
     p, T_p = np.meshgrid(rate, pulse_durations)
     # Converts the temperatures into an array and reshapes it into the right shape (2D)
@@ -173,4 +174,19 @@ def create_colormap(rate, pulse_durations, temp):
     plt.xlabel('Rate')
     plt.ylabel('Pulsdauer')
     plt.title('Temperatur Colormap')
+    plt.show()
+    
+def create_thickmap(rate, pulse_durations, thick):
+    # Creates a meshgrid for the colormap
+    p, T_p = np.meshgrid(rate, pulse_durations)
+    # Converts the temperatures into an array and reshapes it into the right shape (2D)
+    Thicks = np.array(thick).reshape(len(pulse_durations), len(rate))
+    # Creates the colormap
+    plt.figure(figsize=(8, 6))
+    plt.imshow(Thicks, extent=(p.min(), p.max(), T_p.min(), T_p.max()), origin='lower', aspect='auto', cmap='inferno')
+    # currently german labels because I need them for my thesis (will be changed in the future)
+    plt.colorbar(label='Schichtdicke')
+    plt.xlabel('Rate')
+    plt.ylabel('Pulsdauer')
+    plt.title('Schichtdicke Colormap')
     plt.show()
