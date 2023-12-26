@@ -10,11 +10,11 @@ params = {
     'P': 2e5,
     'T0_so': 1e-14,
     'T0_sub': 0e0,
-    't_range': [0,100],
+    't_range': [0,1000],
     'pulsed': True,
     'f': 0.1,
     't_p': 1e0,
-    'n': 10,
+    'n': 100,
     'thick0': 0.0,
     }
 
@@ -148,7 +148,7 @@ def calc_temp(t_p, rate_vals, p_opt):
     print('Calculation of temperatures is running:')
     for i in range(len(t_p)):
         for p in range(len(rate_vals)):
-            if p_opt[i][p] == np.NaN:
+            if np.isnan(p_opt[i][p]):
                 temps.append(np.NaN)
                 thicks.append(np.NaN)
             else:
