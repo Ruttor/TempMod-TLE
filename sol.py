@@ -5,6 +5,7 @@ from scipy.optimize import bisect
 import mod
 import dgl
 from tqdm import tqdm
+from concurrent.futures import ProcessPoolExecutor
 
 params = {
     'P': 2e5,
@@ -126,6 +127,22 @@ def calc_p_opt(t_p, rate_vals):
     p_opt = np.array(p_opt).reshape(len(t_p), len(rate_vals))
     print('Calculation of optimal powervalues is done.')
     return p_opt
+
+def calc_single_power(args):
+    tp0, r = args
+    return find_power(difference, 1e3, args=(tp0, r, 100, 10))
+
+def calc_p_opt_parallel(t_p, rate_vals):
+    print('Calculation of optimal power values is running...')
+    tp_r_combinations = [(tp0, r) for tp0 in t_p for r in rate_vals]
+
+    with ProcessPoolExecutor() as executor:
+        p_opt = list(executor.map(calc_single_power, tp_r_combinations))
+
+    p_opt = np.array(p_opt).reshape(len(t_p), len(rate_vals))
+    print('Calculation of optimal power values is done.')
+    return p_opt
+
     
 def calc_temp(t_p, rate_vals, p_opt):
     """Calculates the temperatures for different pulse durations and rates.
@@ -161,32 +178,25 @@ def calc_temp(t_p, rate_vals, p_opt):
     print('Calculation of temperatures is done.')
     return temps, thicks
 
-def create_tempmap(rate, pulse_durations, temp):
-    # Creates a meshgrid for the colormap
-    p, T_p = np.meshgrid(rate, pulse_durations)
-    # Converts the temperatures into an array and reshapes it into the right shape (2D)
-    Temps = np.array(temp).reshape(len(pulse_durations), len(rate))
-    # Creates the colormap
-    plt.figure(figsize=(8, 6))
-    plt.imshow(Temps, extent=(p.min(), p.max(), T_p.min(), T_p.max()), origin='lower', aspect='auto', cmap='inferno')
-    # currently german labels because I need them for my thesis (will be changed in the future)
-    plt.colorbar(label='Substrattemperatur')
-    plt.xlabel('Rate')
-    plt.ylabel('Pulsdauer')
-    plt.title('Temperatur Colormap')
-    plt.show()
-    
-def create_thickmap(rate, pulse_durations, thick):
-    # Creates a meshgrid for the colormap
-    p, T_p = np.meshgrid(rate, pulse_durations)
-    # Converts the temperatures into an array and reshapes it into the right shape (2D)
-    Thicks = np.array(thick).reshape(len(pulse_durations), len(rate))
-    # Creates the colormap
-    plt.figure(figsize=(8, 6))
-    plt.imshow(Thicks, extent=(p.min(), p.max(), T_p.min(), T_p.max()), origin='lower', aspect='auto', cmap='inferno')
-    # currently german labels because I need them for my thesis (will be changed in the future)
-    plt.colorbar(label='Schichtdicke')
-    plt.xlabel('Rate')
-    plt.ylabel('Pulsdauer')
-    plt.title('Schichtdicke Colormap')
-    plt.show()
+
+def calc_temp_single(args):
+    t_p, rate, p_opt = args
+    if np.isnan(p_opt):
+        return np.NaN, np.NaN
+    else:
+        res = calc_res(P=p_opt, t_p=t_p, pulsed=True)
+        thickness, temperature = res['Thickness'][-1], max(res['Temp_substrate'])
+        return thickness, temperature
+
+def calc_temp_parallel(t_p, rate_vals, p_opt):
+    print('Calculation of temperatures is running...')
+    args_list = [(t_p[i], rate_vals[j], p_opt[i][j]) for i in range(len(t_p)) for j in range(len(rate_vals))]
+
+    with ProcessPoolExecutor() as executor:
+        results = list(executor.map(calc_temp_single, args_list))
+
+    temps, thicks = zip(*results)
+    temps = np.array(temps).reshape(len(t_p), len(rate_vals))
+    thicks = np.array(thicks).reshape(len(t_p), len(rate_vals))
+    print('Calculation of temperatures is done.')
+    return temps, thicks

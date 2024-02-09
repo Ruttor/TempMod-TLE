@@ -12,3 +12,5 @@ Testcase.ipynb
 boundaries.pdf
 draft.ipynb
 *.gz
+*.pdf
+test-output/flowchart

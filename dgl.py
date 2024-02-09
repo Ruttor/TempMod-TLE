@@ -11,7 +11,7 @@ c = {
     'gr_exp': 1.128e3, # growth rate exponent factor e^(- '' /T)
     'ambient_temperature': 0, # ambient temperature
     'vwl': 0, # verdampfungswärmeleistung
-    'wl': 3, # wärmeleitung
+    'wl': 0, # wärmeleitung
     }
 
 # Zu lösendes Differentialgleichungssystem
