@@ -8,7 +8,7 @@ from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor
 
 params = {
-    'P': 2e5,
+    'P': 2e10,
     'T0_so': 1e-14,
     'T0_sub': 0e0,
     't_range': [0,1000],
@@ -123,14 +123,14 @@ def calc_p_opt(t_p, rate_vals):
     for tp0 in t_p:
         print(f'Calculation for t_p={tp0:.1f} s:')
         for r in tqdm(rate_vals):
-            p_opt.append(find_power(difference, 1e3, args=(tp0, r, 100, 10)))
+            p_opt.append(find_power(difference, 1e5, args=(tp0, r, 100, 10)))
     p_opt = np.array(p_opt).reshape(len(t_p), len(rate_vals))
     print('Calculation of optimal powervalues is done.')
     return p_opt
 
 def calc_single_power(args):
     tp0, r = args
-    return find_power(difference, 1e3, args=(tp0, r, 100, 10))
+    return find_power(difference, 1e5, args=(tp0, r, 100, 10))
 
 def calc_p_opt_parallel(t_p, rate_vals):
     print('Calculation of optimal power values is running...')

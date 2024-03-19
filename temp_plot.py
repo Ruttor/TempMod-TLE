@@ -9,7 +9,7 @@ def create_tempmap(rate, pulse_durations, temp):
     Temps = np.array(temp).reshape(len(rate), len(pulse_durations))
     # Creates the colormap
     plt.figure(figsize=(5, 4))
-    plt.imshow(Temps, origin='lower', aspect='auto', cmap='inferno')
+    plt.imshow(Temps, extent=(T_p.min(), T_p.max(), p.min(), p.max()), origin='lower', aspect='auto', cmap='inferno')
     # plt.tick_params(axis='both', which='major', labelsize=12)
     # plt.yticks([p.min(), p.max()], ['kurz', 'lang'], fontsize=12)
     # plt.xticks([p.min(), p.max()], ['niedrig', 'hoch'], fontsize=12)
@@ -31,7 +31,7 @@ def create_thickmap(rate, pulse_durations, thick):
     Thicks = np.array(thick).reshape(len(rate), len(pulse_durations))
     # Creates the colormap
     plt.figure(figsize=(8, 6))
-    plt.imshow(Thicks, extent=(p.min(), p.max(), T_p.min(), T_p.max()), origin='lower', aspect='auto', cmap='inferno')
+    plt.imshow(Thicks, extent=(T_p.min(), T_p.max(), p.min(), p.max()), origin='lower', aspect='auto', cmap='inferno')
     # plt.tick_params(axis='both', which='major', labelsize=12)
     # plt.xticks([p.min(), p.max()], ['niedrig', 'hoch'])
     # plt.yticks([p.min(), p.max()], ['kurz', 'lang'])
@@ -50,7 +50,7 @@ def create_powmap(rate, pulse_durations, pow):
     Pows = np.array(pow).reshape(len(rate), len(pulse_durations))
     # Creates the colormap
     plt.figure(figsize=(5, 4))
-    plt.imshow(Pows, extent=(p.min(), p.max(), T_p.min(), T_p.max()), origin='lower', aspect='auto', cmap='inferno')
+    plt.imshow(Pows, extent=(T_p.min(), T_p.max(), p.min(), p.max()), origin='lower', aspect='auto', cmap='inferno')
     # plt.tick_params(axis='both', which='major', labelsize=12)
     # plt.yticks([p.min(), p.max()], ['kurz', 'lang'], fontsize=12)
     # plt.xticks([p.min(), p.max()], ['niedrig', 'hoch'], fontsize=12)
