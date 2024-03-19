@@ -1,5 +1,18 @@
 # Faktoren vor den Termen in den DGL's
 import numpy as np
+# c = {
+#     'source_therm_cap': 0.133, # thermal capacity source
+#     'source_radiation': 4e-13, # radiative heat emission at source
+#     'laser_power': 1, # laser power
+#     'sub_therm_cap': 3.7, # thermal capacity source
+#     'sub_absorption': 1.88e-14*1e4, # radiative heat absorption at substrate from source
+#     'sub_radiation': 4.6e-10, # radiative heat emission at substrate
+#     'gr_factor': 1.3e18, # growth rate factor '' e^(-1/T)
+#     'gr_exp': 5e5 *1e-2, # growth rate exponent factor e^(- '' /T)
+#     'ambient_temperature': 293, # ambient temperature
+#     'vwl': 1.3e18 *1e-2, # verdampfungswärmeleistung  # Sollwert ist 1.13e18 1.13e17 ist zu groß und 1.13e16 hat keinen Einfluss
+#     'wl': 1e-3 *1e3, # wärmeleitung
+#     }
 c = {
     'source_therm_cap': 0.133, # thermal capacity source
     'source_radiation': 4e-13*1e1, # radiative heat emission at source
@@ -11,7 +24,7 @@ c = {
     'gr_exp': 1.128e3, # growth rate exponent factor e^(- '' /T)
     'ambient_temperature': 0, # ambient temperature
     'vwl': 0, # verdampfungswärmeleistung
-    'wl': 0, # wärmeleitung
+    'wl': 3, # wärmeleitung
     }
 
 # Zu lösendes Differentialgleichungssystem

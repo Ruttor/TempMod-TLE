@@ -195,7 +195,7 @@ def calc_temp_parallel(t_p, rate_vals, p_opt):
     with ProcessPoolExecutor() as executor:
         results = list(executor.map(calc_temp_single, args_list))
 
-    temps, thicks = zip(*results)
+    thicks, temps = zip(*results)
     temps = np.array(temps).reshape(len(t_p), len(rate_vals))
     thicks = np.array(thicks).reshape(len(t_p), len(rate_vals))
     print('Calculation of temperatures is done.')
