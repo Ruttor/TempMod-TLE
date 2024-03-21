@@ -18,13 +18,13 @@ c = {
     'source_radiation': 4e-13, # radiative heat emission at source
     'laser_power': 1, # laser power
     'sub_therm_cap': 3.7, # thermal capacity source
-    'sub_absorption': 1.88e-13*1e3, # radiative heat absorption at substrate from source
+    'sub_absorption': 4e-13,#*1e3, # radiative heat absorption at substrate from source
     'sub_radiation': 4.6e-10, # radiative heat emission at substrate
     'gr_factor': 1.3e18, # growth rate factor '' e^(-1/T) 
     'gr_exp': 51118, # growth rate exponent factor e^(- '' /T)
     'ambient_temperature': 293, # ambient temperature
     'vwl': 1.3e18, # verdampfungswärmeleistung
-    'wl': 1e-3*1e1, # wärmeleitung
+    'wl': 1e-3,#*1e1, # wärmeleitung
     }
 
 # Zu lösendes Differentialgleichungssystem

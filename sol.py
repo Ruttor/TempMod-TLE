@@ -9,8 +9,8 @@ from concurrent.futures import ProcessPoolExecutor
 
 params = {
     'P': 2e10,
-    'T0_so': 1e-14,
-    'T0_sub': 0e0,
+    'T0_so': 293,
+    'T0_sub': 293,
     't_range': [0,1000],
     'pulsed': True,
     'f': 0.1,
